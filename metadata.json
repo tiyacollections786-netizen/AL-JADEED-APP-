@@ -1,0 +1,8 @@
+{
+  "name": "Remix Remix Remix Al Jadeed Meta Eggs - Digital Poultry \u0026 Egg Ownership Platform",
+  "description": "Al Jadeed Meta Eggs - Modern digital poultry and egg ownership platform. Purchase digital hen ownership, track daily egg production, and manage 120-day cycles with real-time analytics.",
+  "requestFramePermissions": [],
+  "majorCapabilities": [
+    "MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"
+  ]
+}

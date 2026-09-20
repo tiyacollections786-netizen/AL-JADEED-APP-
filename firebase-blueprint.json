@@ -1,0 +1,141 @@
+{
+  "entities": {
+    "User": {
+      "title": "User",
+      "description": "User profile containing authentication details, contact info, and account balances.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Unique user ID" },
+        "name": { "type": "string", "description": "User's full name" },
+        "email": { "type": "string", "format": "email", "description": "User's email address" },
+        "phone": { "type": "string", "description": "Pakistani phone number" },
+        "role": { "type": "string", "enum": ["customer", "admin"], "description": "Access control role" },
+        "balance": { "type": "number", "description": "Cash balance in PKR" },
+        "referralCode": { "type": "string", "description": "Unique referral code" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Creation timestamp" }
+      },
+      "required": ["id", "name", "email", "phone", "role"]
+    },
+    "HenPackage": {
+      "title": "HenPackage",
+      "description": "Available poultry ownership packages with duration, price, and daily yields.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Package ID" },
+        "title": { "type": "string", "description": "Package title" },
+        "price": { "type": "number", "description": "Cost in PKR" },
+        "hensCount": { "type": "number", "description": "Number of hens in this package" },
+        "dailyEggs": { "type": "number", "description": "Expected daily egg output" },
+        "cycleDays": { "type": "number", "description": "Production cycle in days (default 120)" },
+        "status": { "type": "string", "enum": ["active", "inactive"], "description": "Availability status" }
+      },
+      "required": ["id", "title", "price", "hensCount", "dailyEggs", "cycleDays"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Hen package purchase order with payment verification.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Order ID" },
+        "userId": { "type": "string", "description": "Purchasing customer user ID" },
+        "packageId": { "type": "string", "description": "Package purchased" },
+        "amount": { "type": "number", "description": "Total payment in PKR" },
+        "quantity": { "type": "number", "description": "Number of packages" },
+        "paymentMethod": { "type": "string", "enum": ["easypaisa", "jazzcash", "bank_transfer", "sadapay", "balance"], "description": "Payment channel" },
+        "paymentProofUrl": { "type": "string", "description": "Payment receipt screenshot or transaction ID" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "Order approval status" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Order creation timestamp" }
+      },
+      "required": ["id", "userId", "packageId", "amount", "quantity", "paymentMethod", "status", "createdAt"]
+    },
+    "HenOwnership": {
+      "title": "HenOwnership",
+      "description": "Customer active and historic digital hen batches with daily egg generation metrics.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Ownership batch ID" },
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "orderId": { "type": "string", "description": "Originating purchase order ID" },
+        "hensCount": { "type": "number", "description": "Count of active hens" },
+        "startDate": { "type": "string", "format": "date-time", "description": "Cycle start timestamp" },
+        "endDate": { "type": "string", "format": "date-time", "description": "Cycle maturity timestamp (120 days)" },
+        "daysElapsed": { "type": "number", "description": "Days active" },
+        "totalEggsProduced": { "type": "number", "description": "Cumulative eggs laid" },
+        "status": { "type": "string", "enum": ["active", "matured", "cancelled"], "description": "Batch status" }
+      },
+      "required": ["id", "userId", "hensCount", "startDate", "endDate", "status"]
+    },
+    "EggBalance": {
+      "title": "EggBalance",
+      "description": "User current available, sold, and collected egg balances.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string", "description": "Owner user ID" },
+        "availableEggs": { "type": "number", "description": "Eggs ready for selling or physical redemption" },
+        "totalSoldEggs": { "type": "number", "description": "Total eggs sold for cash" },
+        "totalEarnedCash": { "type": "number", "description": "Total earnings in PKR from egg sales" },
+        "lastUpdated": { "type": "string", "format": "date-time", "description": "Last update timestamp" }
+      },
+      "required": ["userId", "availableEggs", "totalSoldEggs", "totalEarnedCash"]
+    },
+    "Withdrawal": {
+      "title": "Withdrawal",
+      "description": "Customer withdrawal requests for earnings.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "description": "Withdrawal ID" },
+        "userId": { "type": "string", "description": "User requesting withdrawal" },
+        "amount": { "type": "number", "description": "Amount in PKR" },
+        "accountType": { "type": "string", "enum": ["easypaisa", "jazzcash", "bank_transfer", "sadapay"], "description": "Destination channel" },
+        "accountTitle": { "type": "string", "description": "Account holder name" },
+        "accountNumber": { "type": "string", "description": "Account number or IBAN" },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"], "description": "Payout status" },
+        "createdAt": { "type": "string", "format": "date-time", "description": "Request creation timestamp" }
+      },
+      "required": ["id", "userId", "amount", "accountType", "accountTitle", "accountNumber", "status", "createdAt"]
+    },
+    "PlatformSettings": {
+      "title": "PlatformSettings",
+      "description": "System-wide settings, rates, WhatsApp support config, and physical farm locations.",
+      "type": "object",
+      "properties": {
+        "platformName": { "type": "string", "description": "Name of the platform" },
+        "henPrice": { "type": "number", "description": "Price per hen in PKR" },
+        "eggMonetaryValue": { "type": "number", "description": "Market egg price in PKR" },
+        "eggsPerHenPerDay": { "type": "number", "description": "Daily egg yield rate per hen" },
+        "productionDurationDays": { "type": "number", "description": "Production cycle length in days" }
+      },
+      "required": ["platformName", "henPrice", "eggMonetaryValue", "eggsPerHenPerDay", "productionDurationDays"]
+    }
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": { "$ref": "#/entities/User" },
+      "description": "User profile records indexed by user ID."
+    },
+    "/packages/{packageId}": {
+      "schema": { "$ref": "#/entities/HenPackage" },
+      "description": "Public poultry package catalog."
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Hen ownership purchase orders."
+    },
+    "/hen_ownership/{ownershipId}": {
+      "schema": { "$ref": "#/entities/HenOwnership" },
+      "description": "Digital hen ownership records."
+    },
+    "/egg_balances/{userId}": {
+      "schema": { "$ref": "#/entities/EggBalance" },
+      "description": "Egg balances per user."
+    },
+    "/withdrawals/{withdrawalId}": {
+      "schema": { "$ref": "#/entities/Withdrawal" },
+      "description": "Customer withdrawal transactions."
+    },
+    "/settings/platform": {
+      "schema": { "$ref": "#/entities/PlatformSettings" },
+      "description": "Platform settings document."
+    }
+  }
+}
